@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type UIEvent } from 'react';
 import { MAX_TOPICS, VISIBLE_AT_FIRST, useRowsOnScroll } from './useRowsOnScroll';
 import Button from '../components/Button';
 import SideBanner from '../components/SideBanner';
-import { Hint, Icon, Speaker } from '../components/Ui';
+import { Icon, Speaker } from '../components/Ui';
 import { topicVisual } from '../api/topicVisuals';
 import { useTopics } from '../api/useTopics';
 import type { ApiTopic } from '../api/gameApi';
@@ -27,7 +27,7 @@ type Props = {
 
 const OFFLINE_CODES = ['NETWORK_ERROR', 'TIMEOUT', 'HTTP_502', 'HTTP_503', 'HTTP_504'];
 
-export default function TopicSelectionScreen({ ageLabel, selected, onSelect, starting = false, waiting = false, startError = null, say }: Props) {
+export default function TopicSelectionScreen({ selected, onSelect, starting = false, waiting = false, startError = null, say }: Props) {
   const { mode, t, tl, uiLang, contentLang } = useLanguage();
   const [state, retry] = useTopics(mode);
   const [visible, setVisible] = useState(VISIBLE_AT_FIRST);
@@ -96,8 +96,6 @@ export default function TopicSelectionScreen({ ageLabel, selected, onSelect, sta
         {isLoading && <div className="topics-more-loading" role="status" aria-live="polite"><span className="topics-spinner" aria-hidden="true" />{t('loadingMoreTopics')}</div>}
       </>}
 
-      <Hint><strong>{t('topicHintTitle')}</strong><p>{t('topicHintText')}</p></Hint>
-      <div className="age-reminder">{t('ageReminder', { age: ageLabel })} <span>♡</span></div>
       </div>
       {waiting && <StartingOverlay />}
     </main>
