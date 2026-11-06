@@ -336,3 +336,10 @@ body{margin:0}button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .screen-topics .surprise-card.compact .surprise-copy p{display:none}
 .screen-topics .surprise-card.compact .surprise-cta{font-size:16px;padding:10px 20px}
 .screen-topics .pick-heading{margin-top:2px}
+
+/* "All Topics" card placement: `pinned` above the list (desktop / tablet), `in-list` first in the list (phones: it scrolls away). */
+.screen-topics .surprise-card.in-list{display:none}
+@media(max-width:900px){
+  .screen-topics .surprise-card.pinned{display:none}
+  .screen-topics .surprise-card.in-list{display:flex}
+}

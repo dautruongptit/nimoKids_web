@@ -53,17 +53,23 @@ export default function TopicSelectionScreen({ ageLabel, selected, onSelect, sta
   // Topic names come from the server in the content language; the "All Topics" tile is interface text.
   const nameOf = (choice: TopicChoice) => choice.topic ? choice.topic.name : t('allTopics');
 
+  // The "All Topics" card exists twice and CSS shows one of them: `pinned` (above the list, shrinks while the list scrolls)
+  // on desktop / tablet, `in-list` (first item of the list, scrolls away like the other topics) on phones.
+  const allTopicsCard = (placement: 'pinned' | 'in-list') =>
+    <section className={`surprise-card ${placement} ${placement === 'pinned' && compact ? 'compact' : ''}`} onClick={() => { if (state.status === 'ready' && !starting) onSelect(ALL_TOPICS); }}>
+      <span className="surprise-badge"><Icon file="278d6" /> {t('favouriteBadge')}</span>
+      <span className="surprise-dice" role="img" aria-label={t('allTopics')}>🎲</span>
+      <div className="surprise-copy"><h1>🌈 {t('allTopicsTitle')} <small>({t('surpriseHint')})</small></h1><p>{t('surpriseDesc')}</p></div>
+      <Button className="surprise-cta" disabled={state.status !== 'ready' || starting}>{t('playSurprise')} 🎲 <span>▷</span></Button>
+    </section>;
+
   return <div className="topic-layout">
     <SideBanner kind="explore" />
     <main className="topic-page">
-      <section className={`surprise-card ${compact ? 'compact' : ''}`} onClick={() => { if (state.status === 'ready' && !starting) onSelect(ALL_TOPICS); }}>
-        <span className="surprise-badge"><Icon file="278d6" /> {t('favouriteBadge')}</span>
-        <span className="surprise-dice" role="img" aria-label={t('allTopics')}>🎲</span>
-        <div className="surprise-copy"><h1>🌈 {t('allTopicsTitle')} <small>({t('surpriseHint')})</small></h1><p>{t('surpriseDesc')}</p></div>
-        <Button className="surprise-cta" disabled={state.status !== 'ready' || starting}>{t('playSurprise')} 🎲 <span>▷</span></Button>
-      </section>
+      {allTopicsCard('pinned')}
       {startError && <p className="start-error" role="alert">{startMessage(startError, t)}</p>}
       <div className="topic-scroll" ref={scroller} onScroll={onListScroll}>
+      {allTopicsCard('in-list')}
       {state.status === 'ready' && <h2 className="pick-heading"><span><i aria-hidden="true" />{t('orPickOne')}</span><em>{t('wonderTopics', { n: choices.length })}</em></h2>}
 
       {state.status === 'loading' && <TopicsLoading />}
