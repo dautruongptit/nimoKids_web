@@ -163,3 +163,119 @@ body{margin:0}button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 }
 @keyframes cta-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 @keyframes cta-shine{0%,55%{left:-60%}100%{left:130%}}
+
+/* ==========================================================================
+   Playful Kids UX & Toy Button Polish (NimoKids Enhancement)
+   ========================================================================== */
+
+/* 1. Springy Toy Physics for Buttons */
+.squishy-button, .quiz-answer, .age-cta, .topic-select, .surprise-cta {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Tactile Toy Button Press */
+.squishy-button:not(:disabled):active,
+.age-cta:not(:disabled):active,
+.surprise-cta:not(:disabled):active {
+  transform: translateY(6px) scale(0.98) !important;
+  box-shadow: 0 1px 0 var(--button-shadow, #D8E3FB) !important;
+}
+
+/* 2. Inviting Home CTA Playful Bounce */
+@media (prefers-reduced-motion: no-preference) {
+  .home-actions > .squishy-button {
+    animation: home-cta-playful 2.8s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+    position: relative;
+    overflow: hidden;
+  }
+  .home-actions > .squishy-button:hover {
+    animation-play-state: paused;
+    transform: translateY(-4px) scale(1.04);
+    box-shadow: 0 12px 0 var(--button-shadow);
+  }
+}
+
+@keyframes home-cta-playful {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  15% {
+    transform: translateY(-10px) scale(1.03) rotate(-1deg);
+  }
+  25% {
+    transform: translateY(2px) scale(0.98) rotate(1deg);
+  }
+  35% {
+    transform: translateY(-4px) scale(1.01) rotate(0);
+  }
+  45% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 3. Playful Topic Tiles Hover & Touch */
+.topic-tile {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease !important;
+}
+
+.topic-tile:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 13px 0 #DEE8FF;
+}
+
+.topic-tile:active {
+  transform: translateY(3px) scale(0.99) !important;
+  box-shadow: 0 4px 0 #DEE8FF !important;
+}
+
+.topic-tile:hover .topic-picture > span,
+.topic-tile:hover .topic-picture > img {
+  transform: scale(1.12) rotate(-6deg);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 4. Quiz Answer Buttons Tactile Feedback */
+.quiz-answer {
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.18s ease !important;
+}
+
+.quiz-answer:not(:disabled):active {
+  transform: translateY(5px) scale(0.98) !important;
+  box-shadow: 0 1px 0 #D0BCFF !important;
+}
+
+.quiz-answer.answer-correct {
+  animation: answer-pop-correct 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.quiz-answer.answer-wrong {
+  animation: answer-shake-wrong 0.4s ease-in-out both;
+}
+
+@keyframes answer-pop-correct {
+  0% { transform: scale(0.95); }
+  50% { transform: scale(1.06) translateY(-4px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+@keyframes answer-shake-wrong {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+/* 5. Age Cards Playful Elevation */
+.age-card {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease !important;
+}
+
+.age-card:hover {
+  transform: translateY(-8px) scale(1.015);
+  box-shadow: 0 22px 42px rgba(255, 77, 141, 0.18), 0 8px 20px rgba(185, 10, 90, 0.12);
+}
+
+.age-card.older:hover {
+  box-shadow: 0 22px 42px rgba(107, 56, 212, 0.18), 0 8px 20px rgba(107, 56, 212, 0.12);
+}
