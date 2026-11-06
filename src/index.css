@@ -318,3 +318,21 @@ body{margin:0}button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
   .screen-home .home-photo>.photo-note{margin-top:14px}
   .screen-home .home-page>.friendly-hint{margin-top:6px;padding:12px 24px}
 }
+
+/* ==========================================================================
+   Topics screen: the page never scrolls, only the topic list does. The "All Topics" card stays on top and shrinks
+   once the list is scrolled (.compact, set by TopicSelectionScreen). No footer on this screen (see App.tsx).
+   ========================================================================== */
+.screen-topics.nimo-app{height:100dvh;min-height:0;overflow:hidden}
+.screen-topics .topic-layout{flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,1fr);padding-bottom:12px;overflow:hidden}
+.screen-topics .topic-layout>.topic-page{display:flex;flex-direction:column;height:100%;min-height:0;box-sizing:border-box;margin-top:0;margin-bottom:0;padding-bottom:12px}
+.screen-topics .side-banner{position:relative;top:auto;align-self:start;max-height:100%;overflow:hidden}
+.screen-topics .topic-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;margin:0 -10px;padding:6px 10px 10px;scrollbar-width:thin}
+.screen-topics .surprise-card{flex-shrink:0;transition:padding .2s ease,margin .2s ease,gap .2s ease}
+.screen-topics .surprise-card.compact{margin:14px 0 8px;padding:12px 24px;gap:16px;border-radius:32px}
+.screen-topics .surprise-card.compact .surprise-badge{top:-12px}
+.screen-topics .surprise-card.compact .surprise-dice{width:48px;height:48px;font-size:28px;border-radius:16px}
+.screen-topics .surprise-card.compact .surprise-copy h1{font-size:22px;line-height:28px}
+.screen-topics .surprise-card.compact .surprise-copy p{display:none}
+.screen-topics .surprise-card.compact .surprise-cta{font-size:16px;padding:10px 20px}
+.screen-topics .pick-heading{margin-top:2px}

@@ -11,6 +11,8 @@ const GESTURE_GAP_MS = 220;
 
 type Options = {
   sentinel: RefObject<HTMLDivElement | null>;
+  /** The element that scrolls the list (the page itself does not scroll). Without it the window is used. */
+  scroller?: RefObject<HTMLElement | null>;
   total: number;
   visible: number;
   setVisible: Dispatch<SetStateAction<number>>;
@@ -21,11 +23,12 @@ type Options = {
 /**
  * Shows one more row per scroll GESTURE (wheel, swipe, keys, touchpad, scrollbar), also when the page is too short to
  * scroll at all: no scroll event fires then, so the wheel / touch / key events themselves are the trigger.
- * The scrolling element is the page (window): .nimo-app uses overflow: clip, which is not a scroll container.
+ * The scrolling element is `scroller` (the topic list), or the page (window) when none is given: .nimo-app uses
+ * overflow: clip, which is not a scroll container.
  * An IntersectionObserver on a sentinel under the list says whether the list end is within NEAR_END_PX of the bottom of
- * the screen. Scrolling back up hides a row again once it has left the screen.
+ * the scrolling area. Scrolling back up hides a row again once it has left the area.
  */
-export function useRowsOnScroll({ sentinel, total, visible, setVisible, isLoading, setIsLoading }: Options) {
+export function useRowsOnScroll({ sentinel, scroller, total, visible, setVisible, isLoading, setIsLoading }: Options) {
   const nearEnd = useRef(false);
   const loading = useRef(false);          // synchronous guard: a state update arrives one render too late
   const visibleRef = useRef(visible);
@@ -47,15 +50,17 @@ export function useRowsOnScroll({ sentinel, total, visible, setVisible, isLoadin
       // The end of the list has just come close because of something the child did a moment ago (End / PageDown key,
       // scrollbar drag): that gesture gets its row now. The page's own layout changes never count.
       if (nearEnd.current && Date.now() - lastInput.current < 600) loadRowRef.current();
-    }, { rootMargin: `0px 0px ${NEAR_END_PX}px 0px` });
+    }, { root: scroller?.current ?? null, rootMargin: `0px 0px ${NEAR_END_PX}px 0px` });
     observer.observe(node);
     return () => { observer.disconnect(); nearEnd.current = false; };
-  }, [hasMore, sentinel]);
+  }, [hasMore, sentinel, scroller]);
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
   useEffect(() => {
-    lastY.current = window.scrollY;
+    const area = scroller?.current ?? null;
+    const scrollTop = () => area ? area.scrollTop : window.scrollY;
+    lastY.current = scrollTop();
     let touchY = 0;
 
     const loadRow = () => {
@@ -74,7 +79,8 @@ export function useRowsOnScroll({ sentinel, total, visible, setVisible, isLoadin
       if (loading.current || visibleRef.current <= VISIBLE_AT_FIRST) return;
       const tiles = document.querySelectorAll('.topic-cards .topic-tile');
       const last = tiles[tiles.length - 1];
-      if (!last || last.getBoundingClientRect().top < window.innerHeight) return;
+      const bottom = area ? area.getBoundingClientRect().bottom : window.innerHeight;
+      if (!last || last.getBoundingClientRect().top < bottom) return;
       const rows = Math.ceil((visibleRef.current - VISIBLE_AT_FIRST) / LOAD_STEP);
       setVisible(Math.min(total, VISIBLE_AT_FIRST + (rows - 1) * LOAD_STEP));
     };
@@ -101,7 +107,7 @@ export function useRowsOnScroll({ sentinel, total, visible, setVisible, isLoadin
     };
     // Scrollbar drag / touchpad momentum: counts only when the child did something a moment ago, never the page's own scrolls.
     const onScroll = () => {
-      const y = window.scrollY;
+      const y = scrollTop();
       const down = y > lastY.current;
       lastY.current = y;
       if (Date.now() - lastInput.current > 1000) return;
@@ -114,14 +120,14 @@ export function useRowsOnScroll({ sentinel, total, visible, setVisible, isLoadin
     window.addEventListener('touchmove', onTouchMove, { passive: true });
     window.addEventListener('keydown', onKey);
     window.addEventListener('mousedown', onMouseDown, { passive: true });
-    window.addEventListener('scroll', onScroll, { passive: true });
+    (area ?? window).addEventListener('scroll', onScroll, { passive: true });
     return () => {
       window.removeEventListener('wheel', onWheel);
       window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('keydown', onKey);
       window.removeEventListener('mousedown', onMouseDown);
-      window.removeEventListener('scroll', onScroll);
+      (area ?? window).removeEventListener('scroll', onScroll);
     };
-  }, [total, setVisible, setIsLoading]);
+  }, [total, scroller, setVisible, setIsLoading]);
 }

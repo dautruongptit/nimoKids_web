@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type UIEvent } from 'react';
 import { MAX_TOPICS, VISIBLE_AT_FIRST, useRowsOnScroll } from './useRowsOnScroll';
 import Button from '../components/Button';
 import SideBanner from '../components/SideBanner';
@@ -33,6 +33,9 @@ export default function TopicSelectionScreen({ ageLabel, selected, onSelect, sta
   const [visible, setVisible] = useState(VISIBLE_AT_FIRST);
   const [isLoading, setIsLoading] = useState(false);
   const sentinel = useRef<HTMLDivElement>(null);
+  const scroller = useRef<HTMLDivElement>(null);
+  // The page does not scroll, only the topic list: once it is scrolled the "All Topics" card shrinks and stays on top.
+  const [compact, setCompact] = useState(false);
 
   const choices: TopicChoice[] = state.status === 'ready'
     ? state.topics.slice(0, MAX_TOPICS).map(topic => ({ key: topic.id, topic }))
@@ -40,19 +43,27 @@ export default function TopicSelectionScreen({ ageLabel, selected, onSelect, sta
   const shown = choices.slice(0, visible);
   const hasMore = visible < choices.length;
 
-  useRowsOnScroll({ sentinel, total: choices.length, visible, setVisible, isLoading, setIsLoading });
+  useRowsOnScroll({ sentinel, scroller, total: choices.length, visible, setVisible, isLoading, setIsLoading });
+  // Shrinking the card makes the list taller, so only shrink when there is room left to scroll (else it would flicker).
+  const onListScroll = (event: UIEvent<HTMLDivElement>) => {
+    const list = event.currentTarget;
+    if (!compact && list.scrollTop > 24 && list.scrollHeight - list.clientHeight > 220) setCompact(true);
+    else if (compact && list.scrollTop < 4) setCompact(false);
+  };
   // Topic names come from the server in the content language; the "All Topics" tile is interface text.
   const nameOf = (choice: TopicChoice) => choice.topic ? choice.topic.name : t('allTopics');
 
   return <div className="topic-layout">
     <SideBanner kind="explore" />
     <main className="topic-page">
-      <section className="surprise-card" onClick={() => { if (state.status === 'ready' && !starting) onSelect(ALL_TOPICS); }}>
+      <section className={`surprise-card ${compact ? 'compact' : ''}`} onClick={() => { if (state.status === 'ready' && !starting) onSelect(ALL_TOPICS); }}>
         <span className="surprise-badge"><Icon file="278d6" /> {t('favouriteBadge')}</span>
         <span className="surprise-dice" role="img" aria-label={t('allTopics')}>🎲</span>
         <div className="surprise-copy"><h1>🌈 {t('allTopicsTitle')} <small>({t('surpriseHint')})</small></h1><p>{t('surpriseDesc')}</p></div>
         <Button className="surprise-cta" disabled={state.status !== 'ready' || starting}>{t('playSurprise')} 🎲 <span>▷</span></Button>
       </section>
+      {startError && <p className="start-error" role="alert">{startMessage(startError, t)}</p>}
+      <div className="topic-scroll" ref={scroller} onScroll={onListScroll}>
       {state.status === 'ready' && <h2 className="pick-heading"><span><i aria-hidden="true" />{t('orPickOne')}</span><em>{t('wonderTopics', { n: choices.length })}</em></h2>}
 
       {state.status === 'loading' && <TopicsLoading />}
@@ -79,10 +90,10 @@ export default function TopicSelectionScreen({ ageLabel, selected, onSelect, sta
         {isLoading && <div className="topics-more-loading" role="status" aria-live="polite"><span className="topics-spinner" aria-hidden="true" />{t('loadingMoreTopics')}</div>}
       </>}
 
-      {waiting && <StartingOverlay />}
-      {startError && <p className="start-error" role="alert">{startMessage(startError, t)}</p>}
       <Hint><strong>{t('topicHintTitle')}</strong><p>{t('topicHintText')}</p></Hint>
       <div className="age-reminder">{t('ageReminder', { age: ageLabel })} <span>♡</span></div>
+      </div>
+      {waiting && <StartingOverlay />}
     </main>
     <SideBanner kind="play" />
   </div>;
