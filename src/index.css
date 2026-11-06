@@ -281,26 +281,26 @@ body{margin:0}button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 }
 
 /* ==========================================================================
-   Home: compact footer, side padding equal to the header (40px / 24px / 18px)
+   Shared footer (every screen that shows it): compact, side padding equal to the header (40px / 24px / 18px)
    so the page fits the viewport without scrolling.
    ========================================================================== */
 .screen-home .home-page{padding-top:32px;padding-bottom:24px}
-.screen-home .nimo-footer.site-footer{padding:16px 40px 12px}
-.screen-home .nimo-footer.site-footer>.footer-grid,
-.screen-home .nimo-footer.site-footer>.footer-bottom{max-width:none;margin-left:0;margin-right:0}
-.screen-home .nimo-footer.site-footer>.footer-grid{gap:24px}
-.screen-home .footer-brand>p{margin:4px 0 8px;font-size:13px;line-height:18px;max-width:none}
-.screen-home .footer-logo img{width:28px;height:28px}
-.screen-home .site-footer .footer-logo strong{font-size:20px;line-height:26px}
-.screen-home .site-footer .footer-badges{flex-direction:row;gap:8px}
-.screen-home .footer-col h3{font-size:14px;margin:0 0 6px}
-.screen-home .footer-col>button{padding:2px 0;font-size:13px}
-.screen-home .footer-col ul{gap:2px 16px;font-size:12px;line-height:17px;grid-template-columns:1fr 1fr}
-.screen-home .footer-col li{padding-left:16px}
-.screen-home .nimo-footer.site-footer>.footer-bottom{margin-top:10px;padding-top:8px;font-size:12px}
-@media(max-width:1050px){.screen-home .nimo-footer.site-footer{padding:16px 24px 12px}}
-@media(max-width:900px){.screen-home .nimo-footer.site-footer>.footer-grid{gap:12px}.screen-home .footer-col ul{grid-template-columns:1fr}}
-@media(max-width:760px){.screen-home .nimo-footer.site-footer{padding:14px 18px 10px}}
+.nimo-footer.site-footer{padding:16px 40px 12px}
+.nimo-footer.site-footer>.footer-grid,
+.nimo-footer.site-footer>.footer-bottom{max-width:none;margin-left:0;margin-right:0}
+.nimo-footer.site-footer>.footer-grid{gap:24px}
+.nimo-footer.site-footer .footer-brand>p{margin:4px 0 8px;font-size:13px;line-height:18px;max-width:none}
+.nimo-footer.site-footer .footer-logo img{width:28px;height:28px}
+.nimo-footer.site-footer .footer-logo strong{font-size:20px;line-height:26px}
+.nimo-footer.site-footer .footer-badges{flex-direction:row;gap:8px}
+.nimo-footer.site-footer .footer-col h3{font-size:14px;margin:0 0 6px}
+.nimo-footer.site-footer .footer-col>button{padding:2px 0;font-size:13px}
+.nimo-footer.site-footer .footer-col ul{gap:2px 16px;font-size:12px;line-height:17px;grid-template-columns:1fr 1fr}
+.nimo-footer.site-footer .footer-col li{padding-left:16px}
+.nimo-footer.site-footer>.footer-bottom{margin-top:10px;padding-top:8px;font-size:12px}
+@media(max-width:1050px){.nimo-footer.site-footer{padding:16px 24px 12px}}
+@media(max-width:900px){.nimo-footer.site-footer>.footer-grid{gap:12px}.nimo-footer.site-footer .footer-col ul{grid-template-columns:1fr}}
+@media(max-width:760px){.nimo-footer.site-footer{padding:14px 18px 10px}}
 
 /* Home on desktop: tighter row gap, and a more compact hero on short screens (laptops 768px high) so nothing scrolls. */
 @media(min-width:1001px){
