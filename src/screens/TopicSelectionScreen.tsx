@@ -44,6 +44,16 @@ export default function TopicSelectionScreen({ selected, onSelect, starting = fa
   const hasMore = visible < choices.length;
 
   useRowsOnScroll({ sentinel, scroller, total: choices.length, visible, setVisible, isLoading, setIsLoading });
+  // The page itself does not scroll, so a wheel turned anywhere outside the list (side banners, margins, header) scrolls the list.
+  useEffect(() => {
+    const onWheel = (event: WheelEvent) => {
+      const list = scroller.current;
+      if (!list || event.ctrlKey || list.contains(event.target as Node)) return;
+      list.scrollTop += event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
+    };
+    window.addEventListener('wheel', onWheel, { passive: true });
+    return () => window.removeEventListener('wheel', onWheel);
+  }, []);
   // Shrinking the card makes the list taller, so only shrink when there is room left to scroll (else it would flicker).
   const onListScroll = (event: UIEvent<HTMLDivElement>) => {
     const list = event.currentTarget;
