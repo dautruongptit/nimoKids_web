@@ -343,3 +343,22 @@ body{margin:0}button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
   .screen-topics .surprise-card.pinned{display:none}
   .screen-topics .surprise-card.in-list{display:flex}
 }
+
+/* Quiz answers: the columns may shrink below their content (1fr alone never goes under min-content, so long answers pushed
+   the right column out of the panel on phones). */
+.quiz-page .answer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.quiz-page .quiz-answer{min-width:0;overflow-wrap:anywhere}
+.quiz-page .tap-hear{white-space:nowrap}
+@media(max-width:560px){
+  .quiz-page .answer-grid{gap:12px}
+  .quiz-page .quiz-answer-cell>.quiz-answer{padding:10px 46px 10px 12px;font-size:20px;line-height:26px;min-height:72px;gap:8px}
+  .quiz-page .audio-button.answer-hear{right:8px;width:34px;height:34px}
+  .quiz-page .tap-hear{padding:8px 12px;font-size:14px}
+  .quiz-page .quiz-tools{gap:8px}
+  .quiz-page .countdown{padding:6px 12px}
+}
+/* Narrow phones: the heading row (question counter, listen again, timer) does not fit with the text label. */
+@media(max-width:420px){
+  .quiz-page .tap-hear-label{display:none}
+  .quiz-page .tap-hear{padding:8px 14px}
+}
