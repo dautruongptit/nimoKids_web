@@ -44,6 +44,8 @@ export default function TopicSelectionScreen({ selected, onSelect, starting = fa
   const hasMore = visible < choices.length;
 
   useRowsOnScroll({ sentinel, scroller, total: choices.length, visible, setVisible, isLoading, setIsLoading });
+  // Coming from a screen that scrolled the page (Home on a short window): start from the top, header and list fully in view.
+  useEffect(() => { window.scrollTo(0, 0); }, []);
   // The page itself does not scroll, so a wheel turned anywhere outside the list (side banners, margins, header) scrolls the list.
   useEffect(() => {
     const onWheel = (event: WheelEvent) => {

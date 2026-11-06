@@ -362,3 +362,5 @@ body{margin:0}button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
   .quiz-page .tap-hear-label{display:none}
   .quiz-page .tap-hear{padding:8px 14px}
 }
+/* Topics: only the topic list scrolls. Lock the document too, so nothing can slide the page (header, bottom row) out of view. */
+html:has(.screen-topics.nimo-app),html:has(.screen-topics.nimo-app) body{overflow:hidden;height:100%}
