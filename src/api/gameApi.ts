@@ -36,6 +36,8 @@ export type ApiQuestion = {
   questionImage: string | null;
   /** Present for dynamic questions (COUNTING_OBJECTS); null for ordinary questions. */
   visual: ApiQuestionVisual | null;
+  /** Kind of question (e.g. COLOR_RECOGNITION); decides how the picture is drawn. Absent on older servers. */
+  questionType?: string | null;
   options: ApiOption[];
 };
 export type ApiSession = {
