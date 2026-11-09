@@ -366,3 +366,26 @@ body{margin:0}button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 html:has(.screen-topics.nimo-app),html:has(.screen-topics.nimo-app) body{overflow:hidden;height:100%}
 /* COLOR_RECOGNITION: the colour is shown as a round swatch (210px, smaller than the frame) with a hairline and a soft shadow so white and pale colours stay visible. The size follows the frame height (at most 90% of it) and the width follows the height, so it stays a circle and shrinks on short frames. */
 .quiz-image.color-swatch>img{flex:none;box-sizing:border-box;height:min(210px,90%);width:auto;aspect-ratio:1/1;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px rgba(80,60,120,.22),0 8px 18px rgba(80,60,120,.18)}
+
+/* Age screen on desktop / tablet: fit the window without scrolling (like Home). The photo takes whatever height is left. */
+@media(min-width:761px){
+  .screen-age.nimo-app{height:100dvh;min-height:0;overflow:hidden}
+  .screen-age .age-page{flex:1;min-height:0;box-sizing:border-box;padding-top:8px;padding-bottom:12px;justify-content:center}
+  .screen-age .age-heading{flex-shrink:0;margin:6px 0 clamp(8px,2vh,24px)}
+  .screen-age .age-heading h1{font-size:clamp(26px,4.4vh,44px);line-height:1.2}
+  .screen-age .age-grid{flex:1;min-height:0;align-items:stretch}
+  .screen-age .age-card{min-height:0;padding:clamp(12px,2.2vh,28px);margin-top:0}
+  .screen-age .age-card-top{margin-bottom:clamp(6px,1.6vh,18px)}
+  .screen-age .age-photo{flex:1 1 0;min-height:48px;height:auto;margin-bottom:clamp(8px,1.8vh,22px)}
+  .screen-age .age-photo img{height:100%}
+  .screen-age .age-card h2{font-size:clamp(18px,2.8vh,24px);line-height:1.25;margin-bottom:4px}
+  .screen-age .age-card>p{min-height:0;font-size:clamp(13px,1.9vh,16px);line-height:1.4}
+  .screen-age .micro-pills{margin-top:clamp(6px,1.4vh,14px)}
+}
+@media(min-width:761px) and (max-height:820px){ .screen-age .micro-pills{display:none} }
+@media(min-width:761px) and (max-height:640px){ .screen-age .age-card>p{display:none} }
+
+/* Arithmetic question ("5 + 2 ="): the expression is large text in the middle of the picture area, not an image. */
+.quiz-image .math-expression{display:flex;align-items:center;justify-content:center;gap:.28em;max-width:100%;padding:0 12px;box-sizing:border-box;font-family:'Quicksand:Bold',Quicksand,system-ui,sans-serif;font-weight:700;font-size:clamp(48px,11vh,104px);line-height:1;color:var(--primary-dark,#B80B5C);font-variant-numeric:tabular-nums;white-space:nowrap}
+.quiz-image .math-expression .math-operator,.quiz-image .math-expression .math-equals{color:#6b38d4}
+@media(max-width:560px){.quiz-image .math-expression{font-size:clamp(40px,12vw,72px)}}
