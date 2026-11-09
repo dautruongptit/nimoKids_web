@@ -364,7 +364,5 @@ body{margin:0}button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 }
 /* Topics: only the topic list scrolls. Lock the document too, so nothing can slide the page (header, bottom row) out of view. */
 html:has(.screen-topics.nimo-app),html:has(.screen-topics.nimo-app) body{overflow:hidden;height:100%}
-/* COLOR_RECOGNITION: the picture is a plain colour, so it fills the whole frame (no shape of its own that could be mistaken for the Shapes topic). A white ring with a hairline keeps white and pale colours visible. */
-.quiz-image.color-swatch>img{object-fit:cover;max-width:none}
-.quiz-image.color-swatch .image-sparkle{display:none}
-.quiz-image.color-swatch::after{content:'';position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 5px #fff,inset 0 0 0 6px rgba(80,60,120,.28);pointer-events:none}
+/* COLOR_RECOGNITION: the colour is shown as a round swatch (126px, smaller than the frame) with a white ring, a hairline and a soft shadow, so white and pale colours stay visible on the frame. It shrinks with a narrow frame and stays a circle (width drives the height). */
+.quiz-image.color-swatch>img{flex:none;box-sizing:border-box;width:min(126px,60%);height:auto;aspect-ratio:1/1;border-radius:50%;border:5px solid #fff;object-fit:cover;box-shadow:0 0 0 1px rgba(80,60,120,.28),0 8px 18px rgba(80,60,120,.18)}
