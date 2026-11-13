@@ -26,11 +26,6 @@ const BEFORE_READING_MS = 1000;
 /** "Nimo is choosing the questions…" stays visible at least this long once the topic name has been read. */
 const WAITING_MIN_MS = 700;
 
-function Progress({ step, label }: { step: number; label?: string }) {
-  const { t } = useLanguage();
-  return <div className="stepper" aria-label={t('stepLabel', { n: step })}>{label && <strong className="stepper-label">{label}:</strong>}<span className={step === 1 ? 'active' : ''}><i>1</i> {t('stepAge')}</span><Icon file="69568" /><span className={step === 2 ? 'active' : ''}><i>2</i> {t('stepTopic')}</span><Icon file="69568" /><span className={step === 3 ? 'active' : ''}><i>3</i> {t('stepPlay')}</span><Icon file="69568" /><span className={step === 4 ? 'active' : ''}><i>4</i> {t('stepCelebrate')}</span></div>;
-}
-
 function NimoKids() {
   const { mode, t, tl, uiLang, contentLang, questionLang } = useLanguage();
   const navigate = useNavigate();
@@ -60,7 +55,6 @@ function NimoKids() {
   const [muted, setMuted] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
   const [answerSpoken, setAnswerSpoken] = useState(false); // the picked answer and the result have been read aloud
-  const [shareMessage, setShareMessage] = useState('');
   const total = session?.totalQuestions ?? 5;
   const score = result?.correctAnswers ?? 0;
   const locked = useRef(false);
@@ -159,7 +153,7 @@ function NimoKids() {
       locked.current = false;
       setSession(created); setQuestion(created.question); setQuestionNumber(created.currentQuestionNumber);
       setTimeLimit(created.timeLimitSeconds); setSeconds(created.timeLimitSeconds); setTimerRunning(false);
-      setAnswerData(null); setResult(null); setSelected(null); setTransitioning(false); setSendError(false); setShareMessage('');
+      setAnswerData(null); setResult(null); setSelected(null); setTransitioning(false); setSendError(false);
       go('quiz');
     } catch (error) {
       setStartError(error instanceof ApiError ? error.code : 'NETWORK_ERROR');
@@ -263,15 +257,6 @@ function NimoKids() {
     return () => clearTimeout(timeout);
   }, [transitioning, screen]);
 
-  async function share() {
-    const text = t('shareText', { score, total, topic: topicName });
-    try {
-      if (navigator.share) await navigator.share({ title: t('shareTitle'), text, url: window.location.origin });
-      else if (navigator.clipboard) { await navigator.clipboard.writeText(`${text} ${window.location.origin}`); setShareMessage(t('copied')); }
-      else setShareMessage(text);
-    } catch (error) { if (!(error instanceof DOMException && error.name === 'AbortError')) setShareMessage(text); }
-  }
-
   return <div className={`nimo-app screen-${screen}`}>
     <header className="nimo-header"><button className="nimo-logo" onClick={() => go(screen === 'quiz' ? 'topics' : 'home')} aria-label={t('homeLabel')}><img src="/assets/e9d88.png" alt={t('mascotAlt')} /><span>NimoKids{screen === 'quiz' && <small>{t('logoTagline')}</small>}</span></button>{screen === 'quiz' && <span className="topic-indicator header-topic">{topicEmoji} {topicName}</span>}{screen !== 'quiz' && <nav className="play-nav" aria-label={t('mainNav')}><button className="nav-active" onClick={() => go('home')}>{t('home')}</button><button onClick={() => go(age ? 'topics' : 'age')}>{t('adventures')}</button>{screen !== 'quiz' && <LanguageSwitcher />}</nav>}<div className="header-tools"><button className={`sound-toggle ${muted ? 'is-muted' : ''}`} onClick={() => { activateAudio(); setMuted(value => !value); window.speechSynthesis?.cancel(); }} aria-label={muted ? t('soundOnLabel') : t('soundOffLabel')} title={muted ? t('soundOnLabel') : t('soundOffLabel')} aria-pressed={!muted}><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor" />{muted ? <path d="M3 3l18 18" strokeWidth="2.6" /> : <><path d="M15.5 9a4 4 0 0 1 0 6" /><path d="M18 6.5a7.5 7.5 0 0 1 0 11" /></>}</svg></button><AccountEntry /></div></header>
     {(screen === 'home' || screen === 'age') && <div className="reference-decor" aria-hidden="true"><img className="cloud-left" src="/assets/4a0bb.svg" alt="" /><img className="cloud-right" src="/assets/8cd9a.svg" alt="" /><img className="star-left" src="/assets/0157e.svg" alt="" /><img className="star-right" src="/assets/ba357.svg" alt="" /><img className="cloud-bottom" src="/assets/ff0b8.svg" alt="" /></div>}
@@ -291,7 +276,7 @@ function NimoKids() {
       return <div key={entry.id} className="quiz-answer-cell"><button className={`quiz-answer ${isCorrect ? 'answer-correct' : isWrongPick ? 'answer-wrong' : feedback ? 'answer-disabled' : ''}`} onClick={() => void answer(entry.id)} disabled={!!feedback || transitioning}><span>{entry.text}</span>{isCorrect ? <span className="state-icon">✓</span> : isWrongPick ? <span className="state-icon">×</span> : null}</button><button className="audio-button answer-hear" onClick={() => say(entry.text, contentLang)} disabled={!!feedback || transitioning} aria-label={t('hear', { name: entry.text })}><Icon file="8e6ac" /></button></div>;
     })}</div>{feedback === 'correct' && <div className="celebration-sparkles" aria-hidden="true">✦　 ✧　 ✦　 ✧　 ✦</div>}</section><Hint><strong>{feedback === 'correct' ? t('quizHintCorrect') : feedback ? t('quizHintAnswered') : t('quizHintIdle')}</strong><p>{feedback ? t('quizHint2Answered') : t('quizHint2Idle')}</p></Hint></main><SideBanner kind="play" /></div>}
 
-    {screen === 'result' && <main className="result-page"><Progress step={4} /><section className="result-panel"><span className="welcome-pill">{t('resultPill')}</span><div className="reward-picture"><span>✦</span><span role="img" aria-label={t('trophy')}>🏆</span><span>✧</span></div><h1>{t('greatJob')}</h1><p>{t('resultText')}</p><div className="reward-stars" aria-label={t('starsLabel', { n: score })}>{Array.from({ length: total }, (_, position) => <span className={position < score ? 'earned' : ''} key={position}>★</span>)}</div><div className="final-score">{score}<span> / {total}</span></div><div className="result-stats"><div><span>{t('accuracy')}</span><strong>{Math.round(result?.accuracy ?? 0)}%</strong></div><div><span>{t('bestStreak')}</span><strong>{result?.maxStreak ?? 0}</strong></div><div><span>{t('currentStreak')}</span><strong>{result?.currentStreak ?? 0}</strong></div></div><Button onClick={start}>{t('playAgain')}</Button><div className="result-actions"><Button variant="blue" onClick={() => go('home')}>{t('homeButton')}</Button><Button variant="lavender" onClick={share}>{t('share')}</Button></div><p className="replay-note">{topicEmoji} {t('replayNote', { topic: topicName, age: age ?? '' })}</p><p className="share-message" role="status">{shareMessage}</p></section></main>}
+    {screen === 'result' && <main className="result-page"><section className="result-panel"><span className="welcome-pill">{t('resultPill')}</span><div className="reward-picture"><span>✦</span><span role="img" aria-label={t('trophy')}>🏆</span><span>✧</span></div><h1>{t('greatJob')}</h1><p>{t('resultText')}</p><div className="reward-stars" aria-label={t('starsLabel', { n: score })}>{Array.from({ length: total }, (_, position) => <span className={position < score ? 'earned' : ''} key={position}>★</span>)}</div><div className="final-score">{score}<span> / {total}</span></div><div className="result-stats"><div><span>{t('accuracy')}</span><strong>{Math.round(result?.accuracy ?? 0)}%</strong></div><div><span>{t('bestStreak')}</span><strong>{result?.maxStreak ?? 0}</strong></div><div><span>{t('currentStreak')}</span><strong>{result?.currentStreak ?? 0}</strong></div></div><Button onClick={start}>{t('playAgain')}</Button></section></main>}
 
     {screen === 'result' && <SaveProgressPrompt />}
     {screen !== 'quiz' && screen !== 'topics' && <footer className="nimo-footer site-footer">

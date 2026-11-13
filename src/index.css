@@ -389,3 +389,19 @@ html:has(.screen-topics.nimo-app),html:has(.screen-topics.nimo-app) body{overflo
 .quiz-image .math-expression{display:flex;align-items:center;justify-content:center;gap:.28em;max-width:100%;padding:0 12px;box-sizing:border-box;font-family:'Quicksand:Bold',Quicksand,system-ui,sans-serif;font-weight:700;font-size:clamp(48px,11vh,104px);line-height:1;color:var(--primary-dark,#B80B5C);font-variant-numeric:tabular-nums;white-space:nowrap}
 .quiz-image .math-expression .math-operator,.quiz-image .math-expression .math-equals{color:#6b38d4}
 @media(max-width:560px){.quiz-image .math-expression{font-size:clamp(40px,12vw,72px)}}
+
+/* Result screen on desktop / tablet: fit the window without scrolling (like Home and Age). Sizes follow the window height. */
+@media(min-width:761px){
+  .screen-result.nimo-app{height:100dvh;min-height:0;overflow:hidden}
+  .screen-result .result-page{flex:1;min-height:0;box-sizing:border-box;padding-top:12px;padding-bottom:12px;justify-content:center;gap:0}
+  .screen-result .result-panel{padding:clamp(10px,2.4vh,32px) 40px clamp(14px,2.8vh,34px);border-radius:40px;box-shadow:0 8px 0 #DEE8FF}
+  .screen-result .reward-picture{margin-top:clamp(0px,1vh,16px)}
+  .screen-result .reward-picture>span:nth-child(2){font-size:clamp(48px,11vh,110px);line-height:1.15}
+  .screen-result .result-panel h1{font-size:clamp(26px,4.6vh,40px);line-height:1.2}
+  .screen-result .result-panel>p{margin-top:4px;font-size:clamp(13px,1.9vh,16px);line-height:1.4}
+  .screen-result .reward-stars{font-size:clamp(26px,4.6vh,42px);margin:4px 0 0}
+  .screen-result .final-score{font-size:clamp(30px,5vh,46px);line-height:1.1}
+  .screen-result .result-stats{padding:clamp(8px,1.6vh,16px) 24px;margin:clamp(8px,1.8vh,20px) 0 clamp(10px,2.2vh,26px)}
+  .screen-result .result-panel>.squishy-button{font-size:clamp(18px,2.8vh,25px)}
+}
+@media(min-width:761px) and (max-height:760px){ .screen-result .welcome-pill,.screen-result .result-panel>p{display:none} }
