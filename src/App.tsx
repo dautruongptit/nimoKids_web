@@ -62,6 +62,14 @@ function NimoKids() {
   const voiceRun = useRef(0); // a newer reading of the question ("Listen again") cancels the callbacks of the older one
 
   const voiceFile = useRef<HTMLAudioElement | null>(null);
+  // Recorded Vietnamese voice of every word of the game: text -> file under /audio/vi. A missing file or manifest only means the
+  // browser voice reads the text instead.
+  const voiceManifest = useRef<Record<string, string>>({});
+  useEffect(() => {
+    fetch('/audio/vi/manifest.json').then(response => (response.ok ? response.json() : {}))
+      .then((map: Record<string, string>) => { if (map && typeof map === 'object') voiceManifest.current = map; })
+      .catch(() => { /* no recorded voices: the browser voice is used */ });
+  }, []);
   /** Stops whatever is being read: the recorded voice and the browser voice. */
   const stopVoice = useCallback(() => {
     if (voiceFile.current) { voiceFile.current.onended = null; voiceFile.current.onerror = null; voiceFile.current.pause(); voiceFile.current = null; }
@@ -84,8 +92,9 @@ function NimoKids() {
       voice.onend = done; voice.onerror = done;
       window.speechSynthesis.speak(voice);
     };
-    if (audioUrl && lang === 'vi' && audioUrl.startsWith('/audio/')) {
-      const file = new Audio(audioUrl);
+    const recorded = lang === 'vi' ? audioUrl ?? (voiceManifest.current[text] ? `/audio/vi/${voiceManifest.current[text]}` : null) : null;
+    if (recorded && recorded.startsWith('/audio/')) {
+      const file = new Audio(recorded);
       voiceFile.current = file;
       file.onended = done;
       file.onerror = () => { if (voiceFile.current === file) { voiceFile.current = null; speak(); } };
@@ -197,7 +206,10 @@ function NimoKids() {
       setAnswerData(data); sound(state);
       // First the answer the child picked, then the result; the next question waits until both have been read.
       const pickedText = question.options.find(option => option.id === optionId)?.text;
-      const readResult = () => say(data.feedback.message, questionLang, () => setAnswerSpoken(true));
+      // On a timeout the child hears the right answer instead of "time's up".
+      const readResult = () => data.result === 'TIMEOUT' && data.correctAnswer?.text
+        ? say(data.correctAnswer.text, contentLang, () => setAnswerSpoken(true))
+        : say(data.feedback.message, questionLang, () => setAnswerSpoken(true));
       if (pickedText) say(pickedText, contentLang, readResult); else readResult();
     } catch (error) {
       const offline = error instanceof ApiError && ['NETWORK_ERROR', 'TIMEOUT', 'HTTP_502', 'HTTP_503', 'HTTP_504'].includes(error.code);
