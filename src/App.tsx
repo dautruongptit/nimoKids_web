@@ -61,20 +61,39 @@ function NimoKids() {
   const audioContext = useRef<AudioContext | null>(null);
   const voiceRun = useRef(0); // a newer reading of the question ("Listen again") cancels the callbacks of the older one
 
-  const say = useCallback((text: string, lang: UiLang = uiLang, onDone?: () => void) => {
-    if (muted || !('speechSynthesis' in window)) { onDone?.(); return; }
-    window.speechSynthesis.cancel();
-    const voice = new SpeechSynthesisUtterance(text);
-    voice.lang = VOICE_LANG[lang]; voice.rate = .85; voice.pitch = 1.2;
-    if (onDone) {
-      // onend/onerror can be missed by some browsers: the guard keeps the countdown from never starting.
-      let called = false;
-      const done = () => { if (called) return; called = true; clearTimeout(guard); onDone(); };
-      const guard = setTimeout(done, 5000);
+  const voiceFile = useRef<HTMLAudioElement | null>(null);
+  /** Stops whatever is being read: the recorded voice and the browser voice. */
+  const stopVoice = useCallback(() => {
+    if (voiceFile.current) { voiceFile.current.onended = null; voiceFile.current.onerror = null; voiceFile.current.pause(); voiceFile.current = null; }
+    window.speechSynthesis?.cancel();
+  }, []);
+
+  /** Reads `text` aloud. With `audioUrl` (the recorded voice of a question, only for Vietnamese) the file is played; if it
+   *  cannot be played the browser voice reads the text, so the child always hears the question. */
+  const say = useCallback((text: string, lang: UiLang = uiLang, onDone?: () => void, audioUrl?: string | null) => {
+    if (muted) { onDone?.(); return; }
+    stopVoice();
+    // onend/onerror can be missed by some browsers: the guard keeps the countdown from never starting.
+    let called = false;
+    const done = () => { if (called) return; called = true; clearTimeout(guard); onDone?.(); };
+    const guard = setTimeout(done, 8000);
+    const speak = () => {
+      if (!('speechSynthesis' in window)) { done(); return; }
+      const voice = new SpeechSynthesisUtterance(text);
+      voice.lang = VOICE_LANG[lang]; voice.rate = .85; voice.pitch = 1.2;
       voice.onend = done; voice.onerror = done;
+      window.speechSynthesis.speak(voice);
+    };
+    if (audioUrl && lang === 'vi' && audioUrl.startsWith('/audio/')) {
+      const file = new Audio(audioUrl);
+      voiceFile.current = file;
+      file.onended = done;
+      file.onerror = () => { if (voiceFile.current === file) { voiceFile.current = null; speak(); } };
+      file.play().catch(() => { if (voiceFile.current === file) { voiceFile.current = null; speak(); } });
+      return;
     }
-    window.speechSynthesis.speak(voice);
-  }, [muted, uiLang]);
+    speak();
+  }, [muted, uiLang, stopVoice]);
 
   function activateAudio() {
     if (!audioContext.current && 'AudioContext' in window) audioContext.current = new AudioContext();
@@ -117,11 +136,11 @@ function NimoKids() {
       if (run !== voiceRun.current || locked.current) return;
       setTimerRunning(true);
       void startTimer(session.sessionId, question.id, true).catch(() => { /* best effort */ });
-    });
+    }, question.questionVoice);
   }
 
   function go(destination: string) {
-    window.speechSynthesis?.cancel();
+    stopVoice();
     navigate(destination === 'home' ? '/' : `/${destination}`);
     window.scrollTo({ top: 0 });
   }
@@ -230,9 +249,9 @@ function NimoKids() {
         if (!active || run !== voiceRun.current) return;
         setTimerRunning(true);
         void startTimer(session.sessionId, question.id).catch(() => { /* best effort: the server falls back to its capped start */ });
-      });
+      }, question.questionVoice);
     });
-    return () => { active = false; window.speechSynthesis?.cancel(); };
+    return () => { active = false; stopVoice(); };
   }, [screen, question?.id]);
 
   useEffect(() => {
@@ -258,7 +277,7 @@ function NimoKids() {
   }, [transitioning, screen]);
 
   return <div className={`nimo-app screen-${screen}`}>
-    <header className="nimo-header"><button className="nimo-logo" onClick={() => go(screen === 'quiz' ? 'topics' : 'home')} aria-label={t('homeLabel')}><img src="/assets/e9d88.png" alt={t('mascotAlt')} /><span>NimoKids{screen === 'quiz' && <small>{t('logoTagline')}</small>}</span></button>{screen === 'quiz' && <span className="topic-indicator header-topic">{topicEmoji} {topicName}</span>}{screen !== 'quiz' && <nav className="play-nav" aria-label={t('mainNav')}><button className="nav-active" onClick={() => go('home')}>{t('home')}</button><button onClick={() => go(age ? 'topics' : 'age')}>{t('adventures')}</button>{screen !== 'quiz' && <LanguageSwitcher />}</nav>}<div className="header-tools"><button className={`sound-toggle ${muted ? 'is-muted' : ''}`} onClick={() => { activateAudio(); setMuted(value => !value); window.speechSynthesis?.cancel(); }} aria-label={muted ? t('soundOnLabel') : t('soundOffLabel')} title={muted ? t('soundOnLabel') : t('soundOffLabel')} aria-pressed={!muted}><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor" />{muted ? <path d="M3 3l18 18" strokeWidth="2.6" /> : <><path d="M15.5 9a4 4 0 0 1 0 6" /><path d="M18 6.5a7.5 7.5 0 0 1 0 11" /></>}</svg></button><AccountEntry /></div></header>
+    <header className="nimo-header"><button className="nimo-logo" onClick={() => go(screen === 'quiz' ? 'topics' : 'home')} aria-label={t('homeLabel')}><img src="/assets/e9d88.png" alt={t('mascotAlt')} /><span>NimoKids{screen === 'quiz' && <small>{t('logoTagline')}</small>}</span></button>{screen === 'quiz' && <span className="topic-indicator header-topic">{topicEmoji} {topicName}</span>}{screen !== 'quiz' && <nav className="play-nav" aria-label={t('mainNav')}><button className="nav-active" onClick={() => go('home')}>{t('home')}</button><button onClick={() => go(age ? 'topics' : 'age')}>{t('adventures')}</button>{screen !== 'quiz' && <LanguageSwitcher />}</nav>}<div className="header-tools"><button className={`sound-toggle ${muted ? 'is-muted' : ''}`} onClick={() => { activateAudio(); setMuted(value => !value); stopVoice(); }} aria-label={muted ? t('soundOnLabel') : t('soundOffLabel')} title={muted ? t('soundOnLabel') : t('soundOffLabel')} aria-pressed={!muted}><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor" />{muted ? <path d="M3 3l18 18" strokeWidth="2.6" /> : <><path d="M15.5 9a4 4 0 0 1 0 6" /><path d="M18 6.5a7.5 7.5 0 0 1 0 11" /></>}</svg></button><AccountEntry /></div></header>
     {(screen === 'home' || screen === 'age') && <div className="reference-decor" aria-hidden="true"><img className="cloud-left" src="/assets/4a0bb.svg" alt="" /><img className="cloud-right" src="/assets/8cd9a.svg" alt="" /><img className="star-left" src="/assets/0157e.svg" alt="" /><img className="star-right" src="/assets/ba357.svg" alt="" /><img className="cloud-bottom" src="/assets/ff0b8.svg" alt="" /></div>}
 
     {screen === 'auth/complete' && <AuthLanding kind="complete" />}
