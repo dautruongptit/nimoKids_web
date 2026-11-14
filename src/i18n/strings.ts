@@ -105,7 +105,7 @@ const vi: Record<UiKey, string> = {
   saySurprise: 'Tất cả chủ đề! Bất ngờ nào!', hear: 'Nghe {name}', selected: 'Đã chọn', selectedTopic: 'Chủ đề đã chọn:',
   moreWorlds: 'Xem thêm chủ đề ↓', fewerWorlds: 'Thu gọn bớt ↑', topicHintTitle: 'Bé chơi thật thoải mái!',
   topicHintText: 'Mỗi lần chạm là một bài học mới. Bé hãy cứ vui chơi và thử sức nhé!', ageReminder: 'Dành riêng cho bạn nhỏ {age} tuổi',
-  letsPlay: 'Chơi nào! 🚀', gettingReady: 'Đang chuẩn bị câu đố… ✨', tapToHear: 'Nghe lại câu hỏi', logoTagline: 'CHƠI & HỌC', scoreLabel: 'Số câu đúng', allTopicsTitle: 'Tất Cả Chủ Đề', surpriseHint: 'Quay ngẫu nhiên!', favouriteBadge: 'Bé thích chơi nhất!', surpriseDesc: 'Vòng quay ngẫu nhiên! Trộn các câu đố động vật, màu sắc, hoa quả siêu vui cho bé.', playSurprise: 'Chơi Ngay!', orPickOne: 'Hoặc chọn chủ đề bé yêu thích:', wonderTopics: '{n} chủ đề hấp dẫn', loadingQuestions: 'Nimo đang chuẩn bị câu đố cho bé…', loadingSlow: 'Mạng hơi chậm một chút, Nimo đang chuẩn bị nhé…',
+  letsPlay: 'Chơi nào! 🚀', gettingReady: 'Đang chuẩn bị câu đố… ✨', tapToHear: 'Nghe lại', logoTagline: 'CHƠI & HỌC', scoreLabel: 'Số câu đúng', allTopicsTitle: 'Tất Cả Chủ Đề', surpriseHint: 'Quay ngẫu nhiên!', favouriteBadge: 'Bé thích chơi nhất!', surpriseDesc: 'Vòng quay ngẫu nhiên! Trộn các câu đố động vật, màu sắc, hoa quả siêu vui cho bé.', playSurprise: 'Chơi Ngay!', orPickOne: 'Hoặc chọn chủ đề bé yêu thích:', wonderTopics: '{n} chủ đề hấp dẫn', loadingQuestions: 'Nimo đang chuẩn bị câu đố cho bé…', loadingSlow: 'Mạng hơi chậm một chút, Nimo đang chuẩn bị nhé…',
   loadingMoreTopics: 'Đang tải thêm chủ đề...', topicsLoading: 'Đang mở các chủ đề vui nhộn…', errTitle: 'Ôi! Mình thử lại nhé',
   errOffline: 'Hình như bị mất mạng rồi. Ba mẹ kiểm tra internet giúp bé nhé!',
   errServer: 'Hệ thống đang nghỉ ngơi một chút. Ba mẹ và bé thử lại sau ít phút nhé.', tryAgain: 'Thử lại 🔄',
@@ -114,7 +114,7 @@ const vi: Record<UiKey, string> = {
 
   tinyLabel: 'NHÌN TRANH, NGHE VÀ CHỌN ĐÁP ÁN', question: 'Câu {n}/{total}', questionAria: 'Câu {n} trên {total}', seconds: 'giây',
   secondsAria: 'Còn {n} giây', pictureAlt: 'Bức tranh câu đố cho bé', tapAnswer: 'Bé chạm vào hình hoặc đáp án đúng nhé ↓', tapAgain: 'Ôi chưa đúng rồi, bé thử lại nhé 💛',
-  fbCorrect: 'Bé giỏi quá! 🎉', fbWrong: 'Thử lại nào bé ơi! 💛', fbTimeout: 'Hết giờ rồi, cố lên nào! ⏰',
+  fbCorrect: 'Bé giỏi quá! 🎉', fbWrong: 'Gần đúng rồi, Thử lại nào bé ơi! 💛', fbTimeout: 'Hết giờ rồi, cố lên nào! ⏰',
   quizHintCorrect: 'Bé làm rất xuất sắc!', quizHintAnswered: 'Cố lên nào, bé đang làm rất tốt đấy!', quizHintIdle: 'Bé nhìn thật kỹ bức tranh nhé!',
   quizHint2Answered: 'Câu hỏi tiếp theo sắp xuất hiện rồi…', quizHint2Idle: 'Câu hỏi tiếp theo sẽ tự hiện ra nhé.',
 
