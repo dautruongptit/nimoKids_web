@@ -114,7 +114,7 @@ const vi: Record<UiKey, string> = {
 
   tinyLabel: 'NHÌN TRANH, NGHE VÀ CHỌN ĐÁP ÁN', question: 'Câu {n}/{total}', questionAria: 'Câu {n} trên {total}', seconds: 'giây',
   secondsAria: 'Còn {n} giây', pictureAlt: 'Bức tranh câu đố cho bé', tapAnswer: 'Bé chạm vào hình hoặc đáp án đúng nhé ↓', tapAgain: 'Ôi chưa đúng rồi, bé thử lại nhé 💛',
-  fbCorrect: 'Bé giỏi quá! 🎉', fbWrong: 'Gần đúng rồi, Thử lại nào bé ơi! 💛', fbTimeout: 'Hết giờ rồi, cố lên nào! ⏰',
+  fbCorrect: 'Đúng rồi, bé giỏi quá! 🎉', fbWrong: 'Gần đúng rồi, Thử lại nào bé ơi! 💛', fbTimeout: 'Hết giờ rồi, cố lên nào! ⏰',
   quizHintCorrect: 'Bé làm rất xuất sắc!', quizHintAnswered: 'Cố lên nào, bé đang làm rất tốt đấy!', quizHintIdle: 'Bé nhìn thật kỹ bức tranh nhé!',
   quizHint2Answered: 'Câu hỏi tiếp theo sắp xuất hiện rồi…', quizHint2Idle: 'Câu hỏi tiếp theo sẽ tự hiện ra nhé.',
 
