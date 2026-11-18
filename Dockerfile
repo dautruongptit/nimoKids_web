@@ -11,7 +11,6 @@ RUN npm install -g pnpm@10
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
-# vite.config.ts imports .figma/make/site.json, so .figma must be part of the build context (see .dockerignore).
 COPY . .
 RUN pnpm build
 
