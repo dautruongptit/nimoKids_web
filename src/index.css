@@ -464,3 +464,14 @@ html:has(.screen-topics.nimo-app),html:has(.screen-topics.nimo-app) body{overflo
 @keyframes dog-show-bark{0%{visibility:hidden}8.06%{visibility:visible}12.1%{visibility:hidden}26.2%{visibility:visible}30.2%{visibility:hidden}60.08%{visibility:visible}64.1%{visibility:hidden}78.2%{visibility:visible}82.3%{visibility:hidden}}
 @media(prefers-reduced-motion:reduce){.dog-face,.dog-flip,.dog-walk,.dog-bark,.dog-bubble{animation:none}.dog-face{left:calc(50% - 22px)}.dog-bark,.dog-bubble{display:none}}
 .screen-topics .surprise-card.compact .dog-run{display:none}
+
+/* Screens narrower than Full HD (< 1920 px): the topic tiles show only the picture and the name. The description, the
+   "5 questions" pill and the speaker are hidden and the tile shrinks to fit; picture and h2 keep their size. */
+@media(max-width:1919px){
+  .screen-topics .topic-tile:not(.all-topics){min-height:0}
+  .screen-topics .topic-tile .topic-copy p,
+  .screen-topics .topic-tile .question-pill,
+  .screen-topics .topic-tile>.audio-button{display:none}
+  .screen-topics .topic-tile:not(.all-topics) .topic-select{padding:16px 12px}
+  .screen-topics .topic-tile:not(.all-topics) .topic-picture{margin:0 auto 10px}
+}
