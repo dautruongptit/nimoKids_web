@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type UIEvent } from 'react';
 import { MAX_TOPICS, VISIBLE_AT_FIRST, useRowsOnScroll } from './useRowsOnScroll';
 import Button from '../components/Button';
 import SideBanner from '../components/SideBanner';
+import { RunningDog } from '../components/RunningDog';
 import { Icon, Speaker } from '../components/Ui';
 import { topicVisual } from '../api/topicVisuals';
 import { useTopics } from '../api/useTopics';
@@ -69,6 +70,7 @@ export default function TopicSelectionScreen({ selected, onSelect, starting = fa
   // on desktop / tablet, `in-list` (first item of the list, scrolls away like the other topics) on phones.
   const allTopicsCard = (placement: 'pinned' | 'in-list') =>
     <section className={`surprise-card ${placement} ${placement === 'pinned' && compact ? 'compact' : ''}`} onClick={() => { if (state.status === 'ready' && !starting) onSelect(ALL_TOPICS); }}>
+      <RunningDog />
       <span className="surprise-badge"><Icon file="278d6" /> {t('favouriteBadge')}</span>
       <span className="surprise-dice" role="img" aria-label={t('allTopics')}>🎲</span>
       <div className="surprise-copy"><h1>🌈 {t('allTopicsTitle')} <small>({t('surpriseHint')})</small></h1><p>{t('surpriseDesc')}</p></div>
