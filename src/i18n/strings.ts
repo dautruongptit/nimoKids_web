@@ -72,6 +72,18 @@ const en = {
   authMaybeLater: 'Maybe later', authParentsTag: 'For parents', authDismiss: 'Dismiss sign-in suggestion', authSigningInPage: 'Signing you in…',
 
   langLabel: 'Language', langVi: 'Học tiếng Việt', langViEn: 'Học tiếng Anh', langViHint: 'Full Vietnamese', langViEnHint: 'Vietnamese questions, English answers', recommended: 'Recommended',
+  helpNav: 'Help',
+  helpFeedbackTitle: 'Send feedback to the NimoKids team', helpFeedbackIntro: 'Found a bug, have an idea, or want a question added? Write to us. No account needed.',
+  helpCategoryLabel: 'What is it about?', helpCatBug: '🐞 A bug', helpCatIdea: '💡 An idea', helpCatQuestion: '❓ A question to add', helpCatOther: '💬 Something else',
+  helpMessageLabel: 'Your message', helpMessagePlaceholder: 'Write a few lines here…', helpTooShort: 'Please write at least {n} characters',
+  helpContactLabel: 'Email or phone, only if you want a reply (optional)', helpContactPlaceholder: 'name@example.com',
+  helpSend: 'Send', helpSending: 'Sending…', helpThanks: 'Thank you!', helpThanksText: 'Your message reached the team. We read every one.', helpSendAnother: 'Send another',
+  helpErrOffline: 'Could not connect. Please check the internet and try again.', helpErrRate: 'You have sent a few messages already. Please try again in an hour.', helpErrGeneric: 'Something went wrong. Please try again.',
+  helpCreateTitle: 'Make your own questions', helpCreateSoon: 'Coming soon', helpCreateText: 'Soon, signed-in parents will be able to write questions for their child and send them to the team to be reviewed. Until then, use "A question to add" in the feedback form and tell us the word and the answer.',
+  helpFaqTitle: 'Quick answers',
+  helpFaq1q: 'How does a round work?', helpFaq1a: 'Each round has 5 questions. Nimo reads the question aloud, then the child has 8 seconds to pick an answer.',
+  helpFaq2q: 'Does my child need an account?', helpFaq2a: 'No. Children can play right away. Signing in is optional and only for parents.',
+  helpFaq3q: 'My child cannot hear the voice', helpFaq3a: 'Check that the sound button at the top right is on and that the device volume is up, then try "Listen again".',
 };
 
 export type UiKey = keyof typeof en;
@@ -118,7 +130,7 @@ const vi: Record<UiKey, string> = {
   quizHintCorrect: 'Bé làm rất xuất sắc!', quizHintAnswered: 'Cố lên nào, bé đang làm rất tốt đấy!', quizHintIdle: 'Bé nhìn thật kỹ bức tranh nhé!',
   quizHint2Answered: 'Câu hỏi tiếp theo sắp xuất hiện rồi…', quizHint2Idle: 'Câu hỏi tiếp theo sẽ tự hiện ra nhé.',
 
-  trophy:'Chiếc cúp vàng', greatJob: 'Bé giỏi tuyệt vời! 🎉',
+  trophy:'Chiếc cúp vàng', greatJob: 'Giỏi quá! Chúc mừng con 🎉',
   starsLabel: '{n} ngôi sao', accuracy: '🎯 Độ chính xác', bestStreak: '🔥 Chuỗi đúng dài nhất', currentStreak: '⭐ Chuỗi hiện tại', playAgain: 'Chơi tiếp! 🚀',
   homeButton: '⌂ Về trang chủ', share: '↗ Khoe thành tích', replayNote: 'Tiếp tục vui học cùng {topic} • {age} tuổi', copied: 'Đã sao chép thành tích! 💛',
   shareText: 'Bé yêu vừa hoàn thành xuất sắc thử thách NimoKids! Đúng {score}/{total} câu ở chủ đề {topic}. 🌟', shareTitle: 'NimoKids • Bé giỏi quá!',
@@ -147,6 +159,18 @@ const vi: Record<UiKey, string> = {
   authMaybeLater: 'Để sau', authParentsTag: 'Dành cho ba mẹ', authDismiss: 'Đóng thông báo', authSigningInPage: 'Đang kết nối tài khoản…',
 
   langLabel: 'Ngôn ngữ', langVi: 'Học tiếng Việt', langViEn: 'Học tiếng Anh', langViHint: 'Toàn bộ tiếng Việt', langViEnHint: 'Câu hỏi tiếng Việt, đáp án tiếng Anh', recommended: 'Khuyên dùng',
+  helpNav: 'Trợ giúp',
+  helpFeedbackTitle: 'Gửi góp ý đến đội ngũ NimoKids', helpFeedbackIntro: 'Ba mẹ gặp lỗi, có ý tưởng hay muốn thêm câu hỏi? Hãy viết cho chúng mình. Không cần tài khoản.',
+  helpCategoryLabel: 'Ba mẹ muốn nói về điều gì?', helpCatBug: '🐞 Lỗi', helpCatIdea: '💡 Ý tưởng', helpCatQuestion: '❓ Câu hỏi muốn thêm', helpCatOther: '💬 Khác',
+  helpMessageLabel: 'Nội dung', helpMessagePlaceholder: 'Ba mẹ viết vài dòng ở đây nhé…', helpTooShort: 'Ba mẹ viết ít nhất {n} ký tự nhé',
+  helpContactLabel: 'Email hoặc số điện thoại, chỉ khi ba mẹ muốn nhận phản hồi (không bắt buộc)', helpContactPlaceholder: 'ten@example.com',
+  helpSend: 'Gửi', helpSending: 'Đang gửi…', helpThanks: 'Cảm ơn ba mẹ!', helpThanksText: 'Góp ý đã đến đội ngũ. Chúng mình đọc từng tin nhắn.', helpSendAnother: 'Gửi thêm',
+  helpErrOffline: 'Chưa kết nối được. Ba mẹ kiểm tra lại mạng rồi thử lại nhé.', helpErrRate: 'Ba mẹ đã gửi khá nhiều tin rồi. Mời ba mẹ thử lại sau một giờ nhé.', helpErrGeneric: 'Có lỗi xảy ra. Ba mẹ thử lại giúp chúng mình nhé.',
+  helpCreateTitle: 'Tự tạo câu hỏi cho bé', helpCreateSoon: 'Sắp ra mắt', helpCreateText: 'Sắp tới, ba mẹ đã đăng nhập sẽ tự soạn câu hỏi cho bé và gửi để đội ngũ duyệt. Trong lúc chờ, ba mẹ chọn "Câu hỏi muốn thêm" trong form góp ý và cho chúng mình biết từ và đáp án nhé.',
+  helpFaqTitle: 'Giải đáp nhanh',
+  helpFaq1q: 'Một lượt chơi diễn ra thế nào?', helpFaq1a: 'Mỗi lượt có 5 câu. Nimo đọc câu hỏi, sau đó bé có 8 giây để chọn đáp án.',
+  helpFaq2q: 'Bé có cần tài khoản không?', helpFaq2a: 'Không. Bé chơi được ngay. Đăng nhập là tùy chọn và dành cho ba mẹ.',
+  helpFaq3q: 'Bé không nghe thấy giọng đọc', helpFaq3a: 'Ba mẹ kiểm tra nút loa ở góc trên bên phải đã bật chưa và âm lượng thiết bị, rồi bấm "Nghe lại".',
 };
 
 export const STRINGS: Record<UiLang, Record<UiKey, string>> = { en, vi };

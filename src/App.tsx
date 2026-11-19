@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import HelpScreen from './screens/HelpScreen';
 import { createBrowserRouter, RouterProvider, useLocation, useNavigate } from 'react-router';
 import Button from './components/Button';
 import { Hint, Icon, Speaker } from './components/Ui';
@@ -59,6 +60,7 @@ function NimoKids() {
   const score = result?.correctAnswers ?? 0;
   const locked = useRef(false);
   const audioContext = useRef<AudioContext | null>(null);
+  const answerRun = useRef(0); // bumped when the child leaves the quiz: an answer still in flight / being read is dropped
   const voiceRun = useRef(0); // a newer reading of the question ("Listen again") cancels the callbacks of the older one
 
   const voiceFile = useRef<HTMLAudioElement | null>(null);
@@ -193,6 +195,8 @@ function NimoKids() {
   async function answer(optionId: string | null) {
     if (locked.current || transitioning || !question || !session) return;
     locked.current = true; setTimerRunning(false); setSendError(false); setSelected(optionId); setAnswerSpoken(false);
+    const run = answerRun.current;
+    const stale = () => run !== answerRun.current; // the child left the quiz meanwhile
     try {
       let data: ApiAnswer;
       try {
@@ -202,14 +206,16 @@ function NimoKids() {
         if (optionId !== null && error instanceof ApiError && error.code === 'ANSWER_TIMEOUT') data = await timeoutQuestion(session.sessionId, question.id);
         else throw error;
       }
+      if (stale()) return;
       const state = data.result === 'CORRECT' ? 'correct' : data.result === 'TIMEOUT' ? 'timeout' : 'wrong';
       setAnswerData(data); sound(state);
       // The child always hears the RIGHT answer (never the wrong one that was tapped), then the sentence shown on screen.
       const spokenAnswer = data.correctAnswer?.text ?? question.options.find(option => option.id === optionId)?.text;
       // The voice reads exactly the sentence shown on screen (without its emoji).
-      const readResult = () => say(t(state === 'correct' ? 'fbCorrect' : state === 'wrong' ? 'fbWrong' : 'fbTimeout').replace(/[^\p{L}\p{N}\s,.!?']/gu, '').trim(), uiLang, () => setAnswerSpoken(true));
-      if (spokenAnswer) say(spokenAnswer, contentLang, () => { setTimeout(readResult, 600); }); else readResult(); // short pause between the two
+      const readResult = () => { if (stale()) return; say(t(state === 'correct' ? 'fbCorrect' : state === 'wrong' ? 'fbWrong' : 'fbTimeout').replace(/[^\p{L}\p{N}\s,.!?']/gu, '').trim(), uiLang, () => { if (!stale()) setAnswerSpoken(true); }); };
+      if (spokenAnswer) say(spokenAnswer, contentLang, () => { if (!stale()) setTimeout(readResult, 600); }); else readResult(); // short pause between the two
     } catch (error) {
+      if (stale()) return;
       const offline = error instanceof ApiError && ['NETWORK_ERROR', 'TIMEOUT', 'HTTP_502', 'HTTP_503', 'HTTP_504'].includes(error.code);
       if (offline) { setSendError(true); setSelected(null); locked.current = false; return; } // let the child tap again
       setStartError('SESSION_LOST'); setSession(null); go('topics'); // session expired / already answered: start a fresh round
@@ -230,11 +236,17 @@ function NimoKids() {
   useEffect(() => { setChoice(ALL_TOPICS); setStartError(null); }, [mode]);
 
   useEffect(() => {
-    if (!['home', 'age', 'topics', 'quiz', 'result', 'auth/complete', 'auth/error'].includes(screen)) navigate('/', { replace: true });
+    if (!['home', 'age', 'topics', 'quiz', 'result', 'help', 'auth/complete', 'auth/error'].includes(screen)) navigate('/', { replace: true });
     else if ((screen === 'topics' || screen === 'quiz' || screen === 'result') && !age) navigate('/age', { replace: true });
     else if (screen === 'quiz' && !session) navigate('/topics', { replace: true });
     else if (screen === 'result' && !result) navigate('/topics', { replace: true });
   }, [screen, age, session, result, navigate]);
+
+  // Leaving the quiz (home, topics, back button) drops everything still pending: no "time's up" or result is read afterwards.
+  useEffect(() => {
+    if (screen === 'quiz') return;
+    answerRun.current++; voiceRun.current++; locked.current = false; setTimerRunning(false); stopVoice();
+  }, [screen]);
 
   // Read the question aloud; the 8 s countdown starts only when the voice ends (and the server is told, see timer-start).
   useEffect(() => {
@@ -290,6 +302,8 @@ function NimoKids() {
     <header className="nimo-header"><button className="nimo-logo" onClick={() => go(screen === 'quiz' ? 'topics' : 'home')} aria-label={t('homeLabel')}><img src="/assets/e9d88.png" alt={t('mascotAlt')} /><span>NimoKids{screen === 'quiz' && <small>{t('logoTagline')}</small>}</span></button>{screen === 'quiz' && <span className="topic-indicator header-topic">{topicEmoji} {topicName}</span>}{screen !== 'quiz' && <nav className="play-nav" aria-label={t('mainNav')}><button className="nav-active" onClick={() => go('home')}>{t('home')}</button><button onClick={() => go(age ? 'topics' : 'age')}>{t('adventures')}</button>{screen !== 'quiz' && <LanguageSwitcher />}</nav>}<div className="header-tools"><button className={`sound-toggle ${muted ? 'is-muted' : ''}`} onClick={() => { activateAudio(); setMuted(value => !value); stopVoice(); }} aria-label={muted ? t('soundOnLabel') : t('soundOffLabel')} title={muted ? t('soundOnLabel') : t('soundOffLabel')} aria-pressed={!muted}><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor" />{muted ? <path d="M3 3l18 18" strokeWidth="2.6" /> : <><path d="M15.5 9a4 4 0 0 1 0 6" /><path d="M18 6.5a7.5 7.5 0 0 1 0 11" /></>}</svg></button><AccountEntry /></div></header>
     {(screen === 'home' || screen === 'age') && <div className="reference-decor" aria-hidden="true"><img className="cloud-left" src="/assets/4a0bb.svg" alt="" /><img className="cloud-right" src="/assets/8cd9a.svg" alt="" /><img className="star-left" src="/assets/0157e.svg" alt="" /><img className="star-right" src="/assets/ba357.svg" alt="" /><img className="cloud-bottom" src="/assets/ff0b8.svg" alt="" /></div>}
 
+    {screen === 'help' && <HelpScreen />}
+
     {screen === 'auth/complete' && <AuthLanding kind="complete" />}
     {screen === 'auth/error' && <AuthLanding kind="error" />}
 
@@ -309,7 +323,7 @@ function NimoKids() {
 
     {screen !== 'quiz' && screen !== 'topics' && <footer className="nimo-footer site-footer">
       <div className="footer-grid">
-        <div className="footer-brand"><div className="footer-logo"><img src="/assets/e9d88.png" alt="" /><strong>NimoKids</strong></div><p>{t('footerBrandText')}</p><div className="footer-badges"><span>{t('footerAges')}</span><span className="safe-tag"><Icon file="1375e" /> {t('safeTag')}</span></div></div>
+        <div className="footer-brand"><div className="footer-logo"><img src="/assets/e9d88.png" alt="" /><strong>NimoKids</strong></div><p>{t('footerBrandText')}</p><div className="footer-badges"><span>{t('footerAges')}</span><span className="safe-tag"><Icon file="1375e" /> {t('safeTag')}</span></div><button className="footer-help" onClick={() => go('help')}>🛟 {t('helpNav')}</button></div>
         <nav className="footer-col" aria-label={t('footerPlay')}><h3>{t('footerPlay')}</h3><button onClick={() => go('home')}>{t('footerLinkHome')}</button><button onClick={() => go('age')}>{t('footerLinkAge')}</button><button onClick={() => go(age ? 'topics' : 'age')}>{t('footerLinkTopics')}</button></nav>
         <div className="footer-col"><h3>{t('footerParents')}</h3><ul><li>{t('footerFact1')}</li><li>{t('footerFact2')}</li><li>{t('footerFact3')}</li><li>{t('footerFact4')}</li></ul></div>
       </div>

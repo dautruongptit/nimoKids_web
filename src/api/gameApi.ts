@@ -120,3 +120,9 @@ export const timeoutQuestion = (sessionId: string, questionId: string) =>
   apiPost<ApiAnswer>(sessionPath(sessionId, 'timeout'), { questionId });
 
 export const finishSession = (sessionId: string) => apiPost<ApiResult>(sessionPath(sessionId, 'finish'));
+
+export type FeedbackCategory = 'BUG' | 'IDEA' | 'QUESTION_REQUEST' | 'OTHER';
+
+/** POST /support-feedback (Help screen). No login: the anonymous id header only limits spam (5 messages per hour). */
+export const sendSupportFeedback = (body: { category: FeedbackCategory; message: string; contact?: string; language?: string }) =>
+  apiPost<null>('/support-feedback', body);
