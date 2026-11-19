@@ -438,14 +438,29 @@ html:has(.screen-topics.nimo-app),html:has(.screen-topics.nimo-app) body{overflo
 @media (max-width:480px){.save-prompt-star{font-size:24px}.save-progress-prompt strong{font-size:15px}.save-prompt-actions{flex-wrap:nowrap}.save-prompt-google{flex:1;min-width:0;padding:9px 12px;white-space:normal}.save-prompt-later{padding:9px 6px}}
 @media (min-width:761px) and (max-height:760px){.screen-result .save-progress-prompt{margin-top:12px;padding-top:10px;padding-bottom:10px}}
 
-/* ── Running puppy (animated GIF, public/assets/dog-run.gif) on the top edge of the "All Topics" card ─────────────
+/* ── Puppy (public/assets/dog-walk.gif + dog-bark.gif) on the top edge of the "All Topics" card ──────────────────────
    It fits in the card's own spacing (no extra margin): feet inside the top padding, head within the 18px gap above the
-   card, and it runs BEHIND the "Bé thích chơi nhất!" badge. */
+   card, and it walks BEHIND the "Bé thích chơi nhất!" badge. One 62 s route, walking at about 4% of the width per second:
+   20% -> bark 2.5 s -> 55% -> bark -> 100% -> turn -> 75% -> bark -> 40% -> bark -> 0% -> turn. The keyframe percentages below
+   are seconds / 62 (bark stops: 5-7.5 s, 16.25-18.75 s, 37.25-39.75 s, 48.5-51 s; turns at 30-31 s and 61-62 s). */
 .dog-run{position:absolute;left:12px;right:12px;bottom:calc(100% - 14px);height:32px;pointer-events:none;z-index:1}
 .surprise-badge{z-index:2}
-.dog-face{position:absolute;left:0;bottom:0;width:44px;height:32px;animation:dog-run 12s ease-in-out infinite}
-.dog-gif{display:block;width:44px;height:32px;animation:dog-turn 12s step-end infinite}
-@keyframes dog-run{0%{left:0}44%{left:calc(100% - 44px)}50%{left:calc(100% - 44px)}94%{left:0}100%{left:0}}
-@keyframes dog-turn{0%{transform:scaleX(1)}47%{transform:scaleX(-1)}97%{transform:scaleX(1)}}
-@media(prefers-reduced-motion:reduce){.dog-face,.dog-gif{animation:none}.dog-face{left:calc(50% - 22px)}}
+.dog-face{position:absolute;left:0;bottom:0;width:44px;height:32px;animation:dog-walk-route 62s linear infinite}
+.dog-flip{position:relative;width:44px;height:32px;animation:dog-turn 62s step-end infinite}
+.dog-gif{position:absolute;left:0;top:0;width:44px;height:32px;display:block}
+.dog-walk{animation:dog-show-walk 62s step-end infinite}
+.dog-bark{visibility:hidden;animation:dog-show-bark 62s step-end infinite}
+.dog-bubble{position:absolute;top:calc(100% + 3px);left:50%;transform:translateX(-50%);visibility:hidden;white-space:nowrap;padding:1px 8px;border-radius:10px;background:#fff;border:1.5px solid var(--primary);color:var(--primary-dark);font-family:'Quicksand:Bold',sans-serif;font-size:11px;line-height:15px;box-shadow:0 2px 0 #FFD0E0;animation:dog-show-bark 62s step-end infinite}
+.dog-bubble::before{content:'';position:absolute;left:50%;top:-5px;width:7px;height:7px;background:#fff;border-left:1.5px solid var(--primary);border-top:1.5px solid var(--primary);transform:translateX(-50%) rotate(45deg)}
+@keyframes dog-walk-route{
+  0%{left:0}8.06%{left:calc((100% - 44px)*.2)}12.1%{left:calc((100% - 44px)*.2)}
+  26.2%{left:calc((100% - 44px)*.55)}30.2%{left:calc((100% - 44px)*.55)}
+  48.4%{left:calc(100% - 44px)}50%{left:calc(100% - 44px)}
+  60.08%{left:calc((100% - 44px)*.75)}64.1%{left:calc((100% - 44px)*.75)}
+  78.2%{left:calc((100% - 44px)*.4)}82.3%{left:calc((100% - 44px)*.4)}
+  98.4%{left:0}100%{left:0}}
+@keyframes dog-turn{0%{transform:scaleX(1)}50%{transform:scaleX(-1)}100%{transform:scaleX(1)}}
+@keyframes dog-show-walk{0%{visibility:visible}8.06%{visibility:hidden}12.1%{visibility:visible}26.2%{visibility:hidden}30.2%{visibility:visible}60.08%{visibility:hidden}64.1%{visibility:visible}78.2%{visibility:hidden}82.3%{visibility:visible}}
+@keyframes dog-show-bark{0%{visibility:hidden}8.06%{visibility:visible}12.1%{visibility:hidden}26.2%{visibility:visible}30.2%{visibility:hidden}60.08%{visibility:visible}64.1%{visibility:hidden}78.2%{visibility:visible}82.3%{visibility:hidden}}
+@media(prefers-reduced-motion:reduce){.dog-face,.dog-flip,.dog-walk,.dog-bark,.dog-bubble{animation:none}.dog-face{left:calc(50% - 22px)}.dog-bark,.dog-bubble{display:none}}
 .screen-topics .surprise-card.compact .dog-run{display:none}
