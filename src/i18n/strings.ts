@@ -43,7 +43,7 @@ const en = {
   quizHintCorrect: "You're a little superstar!", quizHintAnswered: 'Every try helps your little mind grow.', quizHintIdle: 'Take a peek. You can do it!',
   quizHint2Answered: 'Another little discovery is on the way…', quizHint2Idle: 'Your next question comes along all by itself.',
 
-  resultPill: '✨ A little adventure. A big high five!', trophy: 'Golden trophy', greatJob: 'Great Job! 🎉', resultText: 'You explored, you tried, and you learned something new!',
+  trophy: 'Golden trophy', greatJob: 'Great Job! 🎉',
   starsLabel: '{n} stars', accuracy: '🎯 Accuracy', bestStreak: '🔥 Best streak', currentStreak: '⭐ Current streak', playAgain: 'Play Again! 🚀',
   homeButton: '⌂ Home', share: '↗ Share', replayNote: 'More {topic} fun • Ages {age}', copied: 'Celebration copied! 💛',
   shareText: 'A little NimoKids celebration! {score}/{total} discoveries in {topic}. 🌟', shareTitle: 'NimoKids • Great Job!',
@@ -69,7 +69,7 @@ const en = {
   authSignOutAll: 'Sign out everywhere', authNoDevices: 'No other devices.', authDevicesError: 'Could not load your devices. Try again later.',
   authSeen: 'Last used {when}', authToastOut: 'Signed out. Let’s keep playing!', authToastEnded: 'You were signed out. You can keep playing and sign in again any time.',
   authToastAll: 'Signed out on all devices.', authSavePromptTitle: 'Keep your little discoveries', authSavePromptText: 'Want to save your progress? Signing in is optional.',
-  authMaybeLater: 'Maybe later', authDismiss: 'Dismiss sign-in suggestion', authSigningInPage: 'Signing you in…',
+  authMaybeLater: 'Maybe later', authParentsTag: 'For parents', authDismiss: 'Dismiss sign-in suggestion', authSigningInPage: 'Signing you in…',
 
   langLabel: 'Language', langVi: 'Học tiếng Việt', langViEn: 'Học tiếng Anh', langViHint: 'Full Vietnamese', langViEnHint: 'Vietnamese questions, English answers', recommended: 'Recommended',
 };
@@ -118,8 +118,8 @@ const vi: Record<UiKey, string> = {
   quizHintCorrect: 'Bé làm rất xuất sắc!', quizHintAnswered: 'Cố lên nào, bé đang làm rất tốt đấy!', quizHintIdle: 'Bé nhìn thật kỹ bức tranh nhé!',
   quizHint2Answered: 'Câu hỏi tiếp theo sắp xuất hiện rồi…', quizHint2Idle: 'Câu hỏi tiếp theo sẽ tự hiện ra nhé.',
 
-  resultPill: '🎉 Hoan hô bé đã hoàn thành!', trophy: 'Chiếc cúp vàng', greatJob: 'Bé giỏi tuyệt vời! 🎉', resultText: 'Bé đã học thêm được rất nhiều điều bổ ích hôm nay!',
-  starsLabel: '{n} ngôi sao', accuracy: '🎯 Độ chính xác', bestStreak: '🔥 Chuỗi đúng dài nhất', currentStreak: '⭐ Chuỗi hiện tại', playAgain: 'Chơi lại lượt mới! 🚀',
+  trophy:'Chiếc cúp vàng', greatJob: 'Bé giỏi tuyệt vời! 🎉',
+  starsLabel: '{n} ngôi sao', accuracy: '🎯 Độ chính xác', bestStreak: '🔥 Chuỗi đúng dài nhất', currentStreak: '⭐ Chuỗi hiện tại', playAgain: 'Chơi tiếp! 🚀',
   homeButton: '⌂ Về trang chủ', share: '↗ Khoe thành tích', replayNote: 'Tiếp tục vui học cùng {topic} • {age} tuổi', copied: 'Đã sao chép thành tích! 💛',
   shareText: 'Bé yêu vừa hoàn thành xuất sắc thử thách NimoKids! Đúng {score}/{total} câu ở chủ đề {topic}. 🌟', shareTitle: 'NimoKids • Bé giỏi quá!',
 
@@ -143,8 +143,8 @@ const vi: Record<UiKey, string> = {
   authBack: 'Quay lại chơi tiếp! 🚀', authDevices: 'Thiết bị đã kết nối', authThisDevice: 'Thiết bị hiện tại', authSignOutDevice: 'Đăng xuất thiết bị',
   authSignOutAll: 'Đăng xuất tất cả thiết bị', authNoDevices: 'Chưa có thiết bị nào khác.', authDevicesError: 'Chưa tải được danh sách thiết bị. Vui lòng thử lại sau.',
   authSeen: 'Hoạt động lần cuối {when}', authToastOut: 'Đã đăng xuất. Bé tiếp tục vui chơi nhé!', authToastEnded: 'Phiên đăng nhập đã kết thúc. Bé vẫn chơi bình thường và có thể đăng nhập lại bất cứ lúc nào.',
-  authToastAll: 'Đã đăng xuất khỏi mọi thiết bị.', authSavePromptTitle: 'Ba mẹ muốn lưu lại kết quả của bé?', authSavePromptText: 'Đăng nhập tài khoản giúp lưu lại các cột mốc đáng nhớ. Hoàn toàn tùy chọn.',
-  authMaybeLater: 'Để sau ba mẹ nhé', authDismiss: 'Đóng thông báo', authSigningInPage: 'Đang kết nối tài khoản…',
+  authToastAll: 'Đã đăng xuất khỏi mọi thiết bị.', authSavePromptTitle: 'Ba mẹ muốn lưu lại kết quả của bé?', authSavePromptText: 'Đăng nhập để lưu điểm và các cột mốc của bé. Không bắt buộc.',
+  authMaybeLater: 'Để sau', authParentsTag: 'Dành cho ba mẹ', authDismiss: 'Đóng thông báo', authSigningInPage: 'Đang kết nối tài khoản…',
 
   langLabel: 'Ngôn ngữ', langVi: 'Học tiếng Việt', langViEn: 'Học tiếng Anh', langViHint: 'Toàn bộ tiếng Việt', langViEnHint: 'Câu hỏi tiếng Việt, đáp án tiếng Anh', recommended: 'Khuyên dùng',
 };

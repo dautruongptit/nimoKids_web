@@ -79,11 +79,12 @@ export function SaveProgressPrompt() {
   const { t } = useLanguage();
   const [dismissed, setDismissed] = useState(false);
   if (dismissed || account.status !== 'anonymous' || !account.available) return null;
+  // A quiet "for parents" strip under the result card: the screen stays the child's, the CTA "Play again" stays the
+  // only big button. "Maybe later" is the single way to close it (no extra × in the corner).
   return <aside className="save-progress-prompt" aria-label={t('authSignInAria')}>
-    <button className="prompt-dismiss" onClick={() => setDismissed(true)} aria-label={t('authDismiss')}>×</button>
     <span className="save-prompt-star" aria-hidden="true">🌟</span>
-    <div><strong>{t('authSavePromptTitle')}</strong><p>{t('authSavePromptText')}</p>
-      <div className="save-prompt-actions"><button onClick={account.open}><GoogleLogo /> {t('authContinueGoogle')}</button><button onClick={() => setDismissed(true)}>{t('authMaybeLater')}</button></div></div>
+    <div className="save-prompt-copy"><span className="save-prompt-tag">{t('authParentsTag')}</span><strong>{t('authSavePromptTitle')}</strong><p>{t('authSavePromptText')}</p></div>
+    <div className="save-prompt-actions"><button className="save-prompt-google" onClick={account.open}><GoogleLogo /> {t('authContinueGoogle')}</button><button className="save-prompt-later" onClick={() => setDismissed(true)}>{t('authMaybeLater')}</button></div>
   </aside>;
 }
 
